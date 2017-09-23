@@ -22,10 +22,10 @@ file(GLOB files src/*.cpp src/mspack/*.c)
 include_directories(src)
 include_directories(src/mspack)
 include_directories(src/unshield)
-include_directories(src/tinydir)
+include_directories(include)
 
 add_subdirectory(src/unshield)
 add_subdirectory(src/mspack)
 
-add_executable(foo ${files})
-target_link_libraries(foo mspack unshield)
+add_library(gextract STATIC ${files})
+target_link_libraries(gextract mspack unshield)
