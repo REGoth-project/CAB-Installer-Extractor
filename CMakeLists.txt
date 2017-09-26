@@ -28,4 +28,4 @@ add_subdirectory(src/unshield)
 add_subdirectory(src/mspack)
 
 add_library(gextract STATIC ${files})
-target_link_libraries(gextract mspack unshield)
+target_link_libraries(gextract mspack libunshield)

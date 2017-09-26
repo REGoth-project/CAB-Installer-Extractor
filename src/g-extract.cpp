@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <limits.h>
 #include <malloc.h>
+#include <errno.h>
 
 #elif _WIN32
 #include <direct.h>
@@ -118,7 +119,7 @@ static void extractCabFile(struct mscab_decompressor* cabd,
 
     // Strip everything but the filename
     if(fileNameWithPath.find_last_of('/') != std::string::npos)
-        flatFileName = fileNameWithPath.substr(fileNameWithPath.find_last_of('/'));
+        flatFileName = fileNameWithPath.substr(fileNameWithPath.find_last_of('/') + 1);
     else
         flatFileName = fileNameWithPath;
 
@@ -146,6 +147,7 @@ void GExtract::extractInstallerExecutable(const std::string& installerFilePath, 
         throw std::runtime_error("Failed self test!");
     }
 
+    make_sure_directory_exists(targetLocation.c_str());
 
     struct mscab_decompressor* cabd;
     if ((cabd = mspack_create_cab_decompressor(NULL)))
@@ -201,7 +203,7 @@ void GExtract::extractInternalCABFile(const std::string& cabFilePath, const std:
         std::string targetFile = std::string(dirname) + "/" + std::string(filename);
         unshield_file_save(us, i, targetFile.c_str());
 
-        printf("Unshield-File: %s %s\n", targetFile.c_str());
+        printf("Unshield-File: %s\n", targetFile.c_str());
     }
 
     unshield_close(us);

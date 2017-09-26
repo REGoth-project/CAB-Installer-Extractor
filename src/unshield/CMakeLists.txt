@@ -22,6 +22,7 @@ check_function_exists(fnmatch HAVE_FNMATCH)
 check_function_exists(iconv HAVE_ICONV)
 
 add_definitions(-DHAVE_CONFIG_H)
+set(USE_OUR_OWN_MD5 1)
 configure_file(unshield_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/unshield_config.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -65,11 +66,14 @@ endif()
 
 add_library(libunshield ${LIBUNSHIELD_LIBRARY_TYPE} ${LIBUNSHIELD_HEADES} ${LIBUNSHIELD_SOURCES})
 
+
+find_package(ZLIB)
+
 if(USE_OUR_OWN_MD5)
-    target_link_libraries(libunshield ${ZLIB_LIBRARY} md5 convert_utf)
+    target_link_libraries(libunshield ${ZLIB_LIBRARIES}  md5 convert_utf)
 else()
     include_directories(${OPENSSL_INCLUDE_DIR})
-    target_link_libraries(libunshield ${ZLIB_LIBRARY} ${OPENSSL_LIBRARIES} convert_utf)
+    target_link_libraries(libunshield ${ZLIB_LIBRARIES} convert_utf)
 endif()
 
 set_target_properties(libunshield PROPERTIES OUTPUT_NAME unshield)
